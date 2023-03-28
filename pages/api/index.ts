@@ -30,6 +30,8 @@ export default async function handler(req: NextRequest) {
 
   const redirectUrl = data["audioInfo"]["url"];
 
+  console.log("redirectUrl", redirectUrl);
+
   return fetch(redirectUrl, {
     redirect: "manual",
   });
