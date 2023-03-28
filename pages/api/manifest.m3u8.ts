@@ -32,9 +32,7 @@ export default async function handler(req: NextRequest) {
 
   console.log("redirectUrl", redirectUrl);
 
-  return fetch(redirectUrl, {
-    redirect: "manual",
-  });
+  return fetch(redirectUrl);
 }
 
 export const config = {
