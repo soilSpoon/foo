@@ -19,18 +19,17 @@ export default async function handler(req: NextRequest) {
 
   tokenUrl.searchParams.append("serviceId", "audioclip");
   tokenUrl.searchParams.append("serviceType", "CHANNEL");
-  tokenUrl.searchParams.append("platform", "WEB");
-  tokenUrl.searchParams.append("quality", "HIGH");
+  tokenUrl.searchParams.append("platform", "IOS");
+  tokenUrl.searchParams.append("audioRightType", "DOWNLOAD");
 
   const tokenResponse = await fetch(tokenUrl);
   const tokenJson = await tokenResponse.json();
 
   const audioToken = tokenJson["audioToken"];
+
   const data = JSON.parse(atob(audioToken));
 
   const redirectUrl = data["audioInfo"]["url"];
-
-  console.log("redirectUrl", redirectUrl);
 
   return fetch(redirectUrl);
 }
