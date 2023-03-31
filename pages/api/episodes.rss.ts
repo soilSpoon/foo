@@ -44,13 +44,17 @@ export default async function handler(
       atom: "http://www.w3.org/2005/Atom",
     },
     custom_elements: [
-      { "itunes:subtitle": "Subtitle" },
-      { "itunes:author": "" },
+      { "itunes:type": "episodic" },
+      { "itunes:subtitle": "" },
+      { "itunes:author": "이대희" },
       {
-        "itunes:summary": "Summary",
+        "itunes:summary": "",
       },
       {
-        "itunes:owner": [{ "itunes:name": "" }, { "itunes:email": "" }],
+        "itunes:owner": [
+          { "itunes:name": "이대희" },
+          { "itunes:email": "lee111dae11@proton.me" },
+        ],
       },
       {
         "itunes:image": {
@@ -84,8 +88,8 @@ export default async function handler(
         size: episode["audioFiles"][0]["fileSize"],
       }, // optional enclosure
       custom_elements: [
-        { "itunes:author": "Author" },
-        { "itunes:subtitle": "Subtitle" },
+        { "itunes:author": "" },
+        { "itunes:subtitle": "" },
         {
           "itunes:image": {
             _attr: {
