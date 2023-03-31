@@ -75,7 +75,7 @@ export default async function handler(
     feed.item({
       title: episode["episodeTitle"],
       description: episode["description"],
-      url: `${baseUrl}/api/manifest.m4a?audioId=${episode["audioId"]}`, // link to the item
+      url: `https://audioclip.naver.com/channels/${channelId}/clips/${episode["episodeNo"]}`, // link to the item
       guid: episode["audioId"], // optional - defaults to url
       date: episode["approvalTimestamp"], // any format that js Date can parse.
       enclosure: {
@@ -84,8 +84,8 @@ export default async function handler(
         size: episode["audioFiles"][0]["fileSize"],
       }, // optional enclosure
       custom_elements: [
-        { "itunes:author": "" },
-        { "itunes:subtitle": "" },
+        { "itunes:author": "Author" },
+        { "itunes:subtitle": "Subtitle" },
         {
           "itunes:image": {
             _attr: {
@@ -93,7 +93,7 @@ export default async function handler(
             },
           },
         },
-        { "itunes:duration": episode["playTime"] },
+        { "itunes:duration": Math.round(episode["playTime"]) },
       ],
     });
   });
