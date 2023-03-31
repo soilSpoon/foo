@@ -1,17 +1,23 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import RSS from "rss";
-import { IncomingMessage } from "http";
 
-export function getBaseUrl() {
-  return (
-    process.env.NEXT_PUBLIC_SITE_URL ?? process.env.NEXT_PUBLIC_VERCEL_URL ?? ""
-  );
+function getBaseUrl() {
+  // 로컬은 http, 프로덕션은 https 라는 가정
+  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+  const host =
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    process.env.NEXT_PUBLIC_VERCEL_URL ??
+    "localhost:3000";
+
+  return `${protocol}://${host}`;
 }
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const baseUrl = getBaseUrl();
+
   const channelId = req.query.channelId;
 
   const episodesUrl = new URL(
@@ -28,7 +34,7 @@ export default async function handler(
 
   const feed = new RSS({
     title: episodesJson["channelName"],
-    feed_url: req.url,
+    feed_url: `${baseUrl}/${req.url}`,
     site_url: `https://audioclip.naver.com/channels/${channelId}`,
     image_url: episodesJson["channelImageUrl"],
     language: "ko",
@@ -65,19 +71,21 @@ export default async function handler(
     ],
   });
 
-  const host = getBaseUrl();
-
   episodes.forEach(function (episode) {
     feed.item({
       title: episode["episodeTitle"],
       description: episode["description"],
-      url: `${host}/api/manifest.m4a?audioId=${episode["audioId"]}`, // link to the item
+      url: `${baseUrl}/api/manifest.m4a?audioId=${episode["audioId"]}`, // link to the item
       guid: episode["audioId"], // optional - defaults to url
       date: episode["approvalTimestamp"], // any format that js Date can parse.
       enclosure: {
-        url: `${host}/api/manifest.m4a?audioId=${episode["audioId"]}`,
+        url: `${baseUrl}/api/manifest.m4a?audioId=${episode["audioId"]}`,
+        type: "audio/x-m4a",
+        size: episode["audioFiles"][0]["fileSize"],
       }, // optional enclosure
       custom_elements: [
+        { "itunes:author": "" },
+        { "itunes:subtitle": "" },
         {
           "itunes:image": {
             _attr: {
